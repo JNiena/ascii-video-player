@@ -1,14 +1,9 @@
-
-#include "asciiconverter.hpp"
-#include "asciiplayer.hpp"
-#include <chrono>
+#include "ascii_player.hpp"
 #include <fmt/core.h>
-#include <string>
 #include <thread>
-#include <vector>
 
 int main(int argc, char **argv) {
-  if (argc != 4) {
+  if (argc != 5) {
     fmt::print(
       "Invalid arguments. Please provide:\n"
       "1) The path to the video.\n"
@@ -17,16 +12,12 @@ int main(int argc, char **argv) {
       "4) How many frames per second the video should run at.\n");
     return -1;
   }
-
-  std::string path = argv[1];
-  unsigned int width = std::stoi(argv[2]);
-  unsigned int height = std::stoi(argv[3]);
-  unsigned int frames_per_second = std::stoi(argv[4]);
-
-  std::vector<std::string> densities {"@", "#", "$", "%", "?", "*", "+", ";", ":", ",", "."};
-  AsciiConverter converter(densities);
-  AsciiPlayer player;
-
-  std::vector<std::string> frames = converter.from_video(path, width, height);
-  player.play_video(frames, frames_per_second);
+  const std::string path = argv[1];
+  const unsigned int width = std::stoi(argv[2]);
+  const unsigned int height = std::stoi(argv[3]);
+  const unsigned int frames_per_second = std::stoi(argv[4]);
+  AsciiPlayer().stream([frames_per_second] (const std::string& frame) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(frames_per_second));
+    fmt::print(frame);
+  }, path, width, height);
 }
