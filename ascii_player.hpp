@@ -23,8 +23,10 @@ class AsciiPlayer {
 
     template<typename T>
     const void for_each_pixel(const cv::Mat& frame, const std::function<void(const T& value, const unsigned int column, const unsigned int row)> callback) const;
-    
+
     const std::string calculate_pixel_density(const std::vector<std::string>& densities, const unsigned int value) const;
+
+    const void play_audio(const std::string& path) const;
 };
 
 #endif
