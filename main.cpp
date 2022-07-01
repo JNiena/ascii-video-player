@@ -1,24 +1,36 @@
 #include "ascii_player.hpp"
+#include <lyra/lyra.hpp>
 #include <fmt/core.h>
-#include <thread>
+#include <filesystem>
 
 int main(int argc, char **argv) {
-  if (argc != 5) {
-    fmt::print(
-      "Invalid arguments. Please provide:\n"
-      "1) The path to the video.\n"
-      "2) The width of the terminal.\n"
-      "3) The height of the terminal.\n"
-      "4) How many frames per second the video should run at.\n");
-    return -1;
+  std::string path = "";
+  unsigned int width = 0;
+  unsigned int height = 0;
+  bool color = false;
+  bool audio = false;
+  lyra::cli parser = lyra::cli()
+    | lyra::opt(path, "path") ["-p"]["--path"]("The path to the video.").required()
+    | lyra::opt(width, "width") ["-w"]["--width"]("The display width.").required()
+    | lyra::opt(height, "height") ["-h"]["--height"]("The display height.").required()
+    | lyra::opt(color, "color") ["-c"]["--color"]("Display color.").optional()
+    | lyra::opt(audio, "audio") ["-a"]["--audio"]("Play audio.").optional();
+  lyra::parse_result result = parser.parse({argc, argv});
+  if (result) {
+    if (!std::filesystem::exists(path)) {
+      fmt::print("The file has not been found.\n");
+      return -1;
+    }
+    if (!(width > 0)) {
+      fmt::print("The width must be greater than zero.\n");
+      return -1;
+    }
+    if (!(height > 0)) {
+      fmt::print("The height must be greater than zero.\n");
+      return -1;
+    }
+    AsciiPlayer().play(path, width, height, color, audio);
+  } else {
+    fmt::print("{}\n", result.message());
   }
-  const std::string path = argv[1];
-  const unsigned int width = std::stoi(argv[2]);
-  const unsigned int height = std::stoi(argv[3]);
-  const unsigned int frames_per_second = std::stoi(argv[4]);
-  AsciiPlayer().stream_color([frames_per_second] (const std::string& frame) {
-    fmt::print("\033[{};{}H", 0, 0);
-    fmt::print(frame);
-    std::this_thread::sleep_for(std::chrono::milliseconds(frames_per_second));
-  }, path, width, height);
 }
