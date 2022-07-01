@@ -7,6 +7,7 @@ const std::vector<std::string> densities {"@", "#", "S", "%", "?", "*", "+", ";"
 const std::vector<std::string> densities_color {"@", "#", "$", "%"};
 
 const void AsciiPlayer::stream(std::function<void(const std::string& frame)> callback, const std::string& path, const unsigned int width, const unsigned int height) const {
+  play_audio(path);
   for_each_frame(path, [&] (cv::Mat& frame) {
     cv::resize(frame, frame, cv::Size(width / 2, height));
     cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
@@ -15,6 +16,7 @@ const void AsciiPlayer::stream(std::function<void(const std::string& frame)> cal
 }
 
 const void AsciiPlayer::stream_color(std::function<void(const std::string& frame)> callback, const std::string& path, const unsigned int width, const unsigned int height) const {
+  play_audio(path);
   for_each_frame(path, [&] (cv::Mat& frame) {
     cv::resize(frame, frame, cv::Size(width / 2, height));
     cv::cvtColor(frame, frame, cv::COLOR_BGR2RGB);
@@ -69,4 +71,8 @@ const std::string AsciiPlayer::calculate_pixel_density(const std::vector<std::st
     }
   }
   return densities.back();
+}
+
+const void AsciiPlayer::play_audio(const std::string& path) const {
+  std::system(fmt::format("cvlc --no-video {} &", path).c_str());
 }
