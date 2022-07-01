@@ -16,8 +16,9 @@ int main(int argc, char **argv) {
   const unsigned int width = std::stoi(argv[2]);
   const unsigned int height = std::stoi(argv[3]);
   const unsigned int frames_per_second = std::stoi(argv[4]);
-  AsciiPlayer().stream([frames_per_second] (const std::string& frame) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(frames_per_second));
+  AsciiPlayer().stream_color([frames_per_second] (const std::string& frame) {
+    fmt::print("\033[{};{}H", 0, 0);
     fmt::print(frame);
+    std::this_thread::sleep_for(std::chrono::milliseconds(frames_per_second));
   }, path, width, height);
 }
