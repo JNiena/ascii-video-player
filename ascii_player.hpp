@@ -11,7 +11,9 @@ namespace cv {
 
 class AsciiPlayer {
   public:
-    const void play(const std::string& path, const unsigned int width, const unsigned int height, const bool color, const bool audio) const;
+    const void play(const std::string& path, const unsigned int width, const unsigned int height, const bool color, const bool audio, unsigned int framerate) const;
+
+    const void play(const std::string& path, const bool color, const bool audio, unsigned int framerate) const;
   private:
     const void stream_colorless(const std::function<void(const std::string& frame)> callback, const std::string& path, const unsigned int width, const unsigned int height) const;
 
@@ -33,6 +35,8 @@ class AsciiPlayer {
     const void play_audio(const std::string& path) const;
 
     const unsigned int find_framerate(const std::string& path) const;
+
+    const std::pair<const unsigned int, const unsigned int> find_dimensions() const;
 };
 
 #endif
