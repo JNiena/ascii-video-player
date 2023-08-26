@@ -98,7 +98,7 @@ const std::string AsciiPlayer::calculate_pixel_density(const std::vector<std::st
 }
 
 const void AsciiPlayer::play_audio(const std::string& path) const {
-  std::system(fmt::format("cvlc --no-video --verbose 0 {} &", path).c_str());
+  std::system(fmt::format("ffplay -nodisp {} &", path).c_str());
 }
 
 const unsigned int AsciiPlayer::find_framerate(const std::string& path) const {
