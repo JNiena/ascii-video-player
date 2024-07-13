@@ -29,6 +29,6 @@
 ```
 git clone https://github.com/JNiena/ascii-video-player.git && cd ascii-video-player
 mkdir build && cd build
-cmake ..
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 ..
 cmake --build . --target ascii_video_player
 ```
