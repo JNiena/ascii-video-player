@@ -1,12 +1,11 @@
 #include "ascii_player.hpp"
-#include <iostream>
 #include <format>
-#include <sys/ioctl.h>
+#include <iostream>
 #include <opencv4/opencv2/imgproc.hpp>
 #include <opencv4/opencv2/videoio.hpp>
+#include <sys/ioctl.h>
 
-namespace ascii_player
-{
+namespace ascii_player {
   const std::vector<std::string> densities {"@@", "##", "SS", "%%", "??", "**", "++", ";;", "::", ",,", "  "};
 
   void play(const std::string& path, int width, int height, bool audio, int framerate = 0) {
@@ -59,31 +58,12 @@ namespace ascii_player
     play(path, dimensions.first, dimensions.second - 1, audio, framerate);
   }
 
-  void stream(std::function<void(const std::string& frame)> callback, const std::string& path, int width, int height) {
-    cv::VideoCapture capture(path);
+  void play_audio(const std::string& path) {
+    std::system(std::format("mpv --no-video \"{}\" > /dev/null 2>&1 &", path).c_str());
+  }
 
-    for (int frame_count = 0; frame_count < capture.get(cv::CAP_PROP_FRAME_COUNT) - 1; frame_count++) {
-      cv::Mat frame;
-      capture >> frame;
-
-      cv::resize(frame, frame, cv::Size(width / 2, height));
-      cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
-
-      std::string ascii;
-
-      for (std::size_t row = 0; row < frame.rows; row++) {
-        for (std::size_t column = 0; column < frame.cols; column++) {
-          const std::string density = calculate_pixel_density(densities, frame.at<unsigned char>(row, column));
-          ascii += density;
-          
-          if (column == frame.cols - 1) {
-            ascii += "\r\n";
-          }
-        }
-      }
-
-      callback(ascii);
-    }
+  int find_framerate(const std::string& path) {
+    return cv::VideoCapture(path).get(cv::CAP_PROP_FPS);
   }
 
   std::string calculate_pixel_density(const std::vector<std::string>& densities, int value) {
@@ -96,14 +76,6 @@ namespace ascii_player
     }
 
     return densities.back();
-  }
-
-  void play_audio(const std::string& path) {
-    std::system(std::format("mpv --no-video \"{}\" > /dev/null 2>&1 &", path).c_str());
-  }
-
-  int find_framerate(const std::string& path) {
-    return cv::VideoCapture(path).get(cv::CAP_PROP_FPS);
   }
 
   std::pair<int, int> find_dimensions() {

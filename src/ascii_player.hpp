@@ -15,11 +15,11 @@ namespace ascii_player {
 
   void stream(const std::function<void(const std::string& frame)> callback, const std::string& path, int width, int height);
 
-  std::string calculate_pixel_density(const std::vector<std::string>& densities, int value);
-
   void play_audio(const std::string& path);
 
   int find_framerate(const std::string& path);
+
+  std::string calculate_pixel_density(const std::vector<std::string>& densities, int value);
 
   std::pair<int, int> find_dimensions();
 }
