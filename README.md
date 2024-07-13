@@ -23,3 +23,12 @@
 `./ascii-video-player --path video.mp4 --audio --fill`
 
 [Click to download a short example video.](https://github.com/JNiena/ascii-video-player/blob/main/example.mp4)
+
+### Building
+
+```
+git clone https://github.com/JNiena/ascii-video-player.git && cd ascii-video-player
+mkdir build && cd build
+cmake ..
+cmake --build . --target ascii_video_player
+```
