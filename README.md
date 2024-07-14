@@ -2,7 +2,7 @@
 
 ### Usage
 
-`ascii-video-player [--help] [--version] --path VAR [--width VAR] [--height VAR] [--framerate VAR] [--audio] [--fill]`
+`ascii-video-player [--help] [--version] --path VAR [--width VAR] [--height VAR] [--framerate VAR] [--blocky] [--audio] [--fill]`
 
 ### Args
 
@@ -18,6 +18,8 @@
 
 `--fill`: Fill display.
 
+`--blocky`: Use block characters.
+
 ### Example
 
 `./ascii-video-player --path video.mp4 --audio --fill`
@@ -29,6 +31,6 @@
 ```
 git clone https://github.com/JNiena/ascii-video-player.git && cd ascii-video-player
 mkdir build && cd build
-cmake ..
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 ..
 cmake --build . --target ascii_video_player
 ```

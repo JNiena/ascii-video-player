@@ -5,9 +5,10 @@
 int main(int argc, char **argv) {
   argparse::ArgumentParser parser("ascii-video-player");
   parser.add_argument("--path").required().help("The path to the video");
-  parser.add_argument("--width").help("The display width.").default_value(0);
-  parser.add_argument("--height").help("The display height.").default_value(0);
-  parser.add_argument("--framerate").help("The video framerate.").default_value(0);
+  parser.add_argument("--width").help("The display width.").scan<'i', int>().default_value(0);
+  parser.add_argument("--height").help("The display height.").scan<'i', int>().default_value(0);
+  parser.add_argument("--framerate").help("The video framerate.").scan<'i', int>().default_value(0);
+  parser.add_argument("--blocky").default_value(false).implicit_value(true).help("Use block characters.");
   parser.add_argument("--audio").default_value(false).implicit_value(true).help("Play audio.");
   parser.add_argument("--fill").default_value(false).implicit_value(true).help("Fill the display.");
 
@@ -40,6 +41,7 @@ int main(int argc, char **argv) {
   if (parser.get<bool>("fill")) {
     ascii_player::play(
       parser.get<std::string>("path"),
+      parser.get<bool>("blocky"),
       parser.get<bool>("audio"),
       parser.get<int>("framerate")
     );
@@ -50,6 +52,7 @@ int main(int argc, char **argv) {
     parser.get<std::string>("path"),
     parser.get<int>("width"),
     parser.get<int>("height"),
+    parser.get<bool>("blocky"),
     parser.get<bool>("audio"),
     parser.get<int>("framerate")
   );
